@@ -13,7 +13,9 @@
         <a href="/about">About</a>
         <a href="/contact">Contact</a>
     </nav>
-    Home
+
+    <!-- <?php echo $slot ?>  This is the php way and the blade way is below with double braces -->
+    {{ $slot }}
 </body>
 
 </html>

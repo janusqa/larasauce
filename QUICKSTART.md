@@ -9,3 +9,6 @@ Setup laravel
 Run laravel app
 - cd ./example-app
 - ./vendor/bin/sail up
+
+
+{{ }} is blade syntaxt and is equivalent to <?php echo ?>
