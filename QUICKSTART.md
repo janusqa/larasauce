@@ -12,3 +12,17 @@ Run laravel app
 
 
 {{ }} is blade syntaxt and is equivalent to <?php echo ?>
+
+
+Configure laravel app in .env file
+- example configure type of db
+- application port
+
+Running commands must be done via sail
+- vendor/bin/sail artisan 
+- OR switch to sail shell "./vendor/bin/sail shell" and run commands directly there example "php artisan"
+- ./vendor/bin/sail shell
+  - php artisan
+  - php artisan db:show
+  - php artisan make:migration // create a migration
+  - php artisan migrate // run a migration
