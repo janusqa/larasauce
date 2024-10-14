@@ -4,6 +4,7 @@ use App\Models\Job;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+
     return view('home', [
         "greeting" => "Yo",
         "name" => "Lary Robot",
@@ -11,14 +12,15 @@ Route::get('/', function () {
 });
 
 Route::get('/jobs', function () {
+
     return view('jobs', [
-        "jobs" => Job::all()
+        "jobs" => Job::all() // using eloquent orm
     ]);
 });
 
 Route::get('/jobs/{id}', function ($id) {
 
-    $job = Job::find($id);
+    $job = Job::find($id); // using eloquent orm
 
     return view('job', ["job" => $job]);
 });

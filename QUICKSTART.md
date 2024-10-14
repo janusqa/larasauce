@@ -26,3 +26,17 @@ Running commands must be done via sail
   - php artisan db:show
   - php artisan make:migration // create a migration
   - php artisan migrate // run a migration
+  - php artisan make:model Employer -m -f  // create a model with accompanying migration and factory
+
+
+REPL for laravel app
+- php artisan tinker  // opens a repl for laravel
+
+
+Factories
+- used to create data from a model.
+- Models by composition can take on behaviour via tratis.
+- User model has trait hasFactory which means we can call factory methods on user to generate data
+- eg. App\Models\User::factory()->create()
+- eg. for creation multiple instances. Create 100 users in the DB
+  - App\Models\User::factory(100)->create()
