@@ -40,3 +40,7 @@ Factories
 - eg. App\Models\User::factory()->create()
 - eg. for creation multiple instances. Create 100 users in the DB
   - App\Models\User::factory(100)->create()
+
+
+Eloquent
+- 
