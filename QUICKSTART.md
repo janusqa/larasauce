@@ -72,11 +72,21 @@ N+1 problem
     TO: $jobs = Job::with('employer')->get(); //eager loading. Load emplyer information
    ```
 
-   Pagination
-   - see "jobs" route and jobs.blade.php.
-   - Pagination UI looks good by default but we can also customize it if need be
-     - to customize it we must fetch it from vendor and pushish it to our local project so we can edit it.
-       - php artisan vendor:publish (now hit enter). This will give us a search in the termainal that we can find the package we are interested in.
-       - the package in question is can be found by searching for "pagination". This will give us the tag "laravel-pagination" which is what we want to edit
-       - we can switch to bootsrap for instance instead of tailwind via "App/Providers/AppServiceProvider.php"
-         -  add "Paginator::useBootstrapFive();" to the boot function.  
+Pagination
+- see "jobs" route and jobs.blade.php.
+- Pagination UI looks good by default but we can also customize it if need be
+    - to customize it we must fetch it from vendor and pushish it to our local project so we can edit it.
+    - php artisan vendor:publish (now hit enter). This will give us a search in the termainal that we can find the package we are interested in.
+    - the package in question is can be found by searching for "pagination". This will give us the tag "laravel-pagination" which is what we want to edit
+    - we can switch to bootsrap for instance instead of tailwind via "App/Providers/AppServiceProvider.php"
+        -  add "Paginator::useBootstrapFive();" to the boot function.  
+  
+Seeders
+- use this to seed a database with data afer doing for exampe a "php artisan migrate:fresh"
+- seeders are location in "/database/seeders"
+- php artisan db:seed  // run the seeders to seed db
+  - OR you can start from scratch and reseed at same time
+    - php artisan migrate:fresh --seed 
+- php artisan make:seeder // create a dedicated seeder file.  That is create a seeder for user table only etc.
+- php artisan db:seed // runs DefaultSeeder.php by default
+- php artisan db:seed --class=JobSeeder // run a specific seeder. !!! REMEMBER TO CLEAR TABLE FIRST OR SEEDING WILL JUST APPEND DATA !!!
