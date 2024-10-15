@@ -43,4 +43,31 @@ Factories
 
 
 Eloquent
-- 
+- App\Models\Job::find(1);
+
+N+1 problem 
+- happens due to lazy loading (similar to djano)
+  - when loading data in a loop, if a relationship is reference in the loop and the data is not already loaded (due to lazy loading) then a new sql query is performed to fetch that data.  This means in a loop many extra queries can be performed which is bad for performance etc.
+  - Use the Lavavel debug toolbar to detect these similarly to how it was done in django
+    - ./vendor/bin/sail shell
+    - composer require barryvdh/laravel-debugbar --dev
+    - in .env set APP_DEBUG=true
+    - Now good to go.
+  - Fix it by using eager loading.  See "jobs" route in routes
+  - To disable lazy loading project wide then add to App/Providers/AppServiceProvider.php the below
+    - ```
+        public function boot(): void
+    {
+        //
+        Model::preventLazyLoading();
+    }
+    ```
+  - This will display an error screen when you try to lazyload.  And you must then find the underlying eloquent query and eager load the query
+  - eg
+   ```
+   <div class="font-bold text-blue-500 text-sm">{{ $job->employer->name }}</div> // lazy loading the employer info in a template
+
+   underlying code is in route 
+    CHANGE: // $jobs = Job::all(); // using eloquent orm // lazy loading. Does not fetch employer information
+    TO: $jobs = Job::with('employer')->get(); //eager loading. Load emplyer information
+   ```

@@ -13,8 +13,13 @@ Route::get('/', function () {
 
 Route::get('/jobs', function () {
 
+    // $jobs = Job::all(); // using eloquent orm // lazy loading. Does not fetch employer information
+    $jobs = Job::with('employer')->get(); //eager loading. Load emplyer information
+
+    // dd($jobs);
+
     return view('jobs', [
-        "jobs" => Job::all() // using eloquent orm
+        "jobs" => $jobs
     ]);
 });
 
