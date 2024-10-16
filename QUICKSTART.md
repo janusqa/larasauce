@@ -95,3 +95,8 @@ Fillable propert in models
 - $fillable // signifies which fields can be mass populated when using eloquent to create a record.
 - $guarded // opposite to fillable, so signifies which fields CANNOT be mass populated. Usually less annoying than fillable
 - so to diable fillable one way is to use $guarded with an empty array.
+
+Validation
+- request()->validate()
+- request()->validate(['title' => ['required', min:3]])
+- https://laravel.com/docs/validation

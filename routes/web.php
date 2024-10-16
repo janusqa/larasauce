@@ -11,6 +11,7 @@ Route::get('/', function () {
     ]);
 });
 
+// Index
 Route::get('/jobs', function () {
 
     // $jobs = Job::all(); // using eloquent orm // lazy loading. Does not fetch employer information
@@ -33,11 +34,21 @@ Route::get('/jobs', function () {
     ]);
 });
 
+// Create
 Route::get('jobs/create', function () {
     //
     return view('jobs/create');
 });
 
+// Edit
+Route::get('/jobs/{id}/edit', function ($id) {
+
+    $job = Job::find($id); // using eloquent orm
+
+    return view('jobs/edit', ["job" => $job]);
+});
+
+// Show
 Route::get('/jobs/{id}', function ($id) {
 
     $job = Job::find($id); // using eloquent orm
@@ -45,7 +56,16 @@ Route::get('/jobs/{id}', function ($id) {
     return view('jobs/show', ["job" => $job]);
 });
 
+// Store
 Route::post('/jobs', function () {
+
+    // validation akin to zod of js fame
+    request()->validate([
+        'title' => ['required', 'min:3'],
+        'salary' => ['required']
+    ]);
+
+
     // recall that all of these fields must be in the fillable property of the model to allow record creation like this.
     // This fillable feature can be disabled.
     Job::create([
@@ -53,6 +73,55 @@ Route::post('/jobs', function () {
         "salary" => request('salary'),
         "employer_id" => 1
     ]);
+
+    return redirect('/jobs');
+});
+
+// Update
+Route::patch('/jobs/{id}', function ($id) {
+
+    // validation
+    request()->validate([
+        'title' => ['required', 'min:3'],
+        'salary' => ['required']
+    ]);
+
+    // Authorize
+    // TODO:
+
+    // using eloquent orm. If Id not found findOrFail issues an abort 
+    // that will bubble up the stack and result in an appropriate error 
+    // as determined by laraval
+    $job = Job::findOrFail($id); // using eloquent orm
+
+    // Update
+    // $job->title = request('title');
+    // $job->salary = request('salary');
+    // $job->save();
+
+    // OR alternatively
+
+    $job->update([
+        'title' => request('title'),
+        'salary' => request('salary')
+    ]);
+
+    return redirect('/jobs/' . $job['id']);
+});
+
+// Destroy
+Route::delete('/jobs/{id}', function ($id) {
+
+    // Authorize
+    // TODO:
+
+    // If Id not found findOrFail issues an abort 
+    // that will bubble up the stack and result in an appropriate error 
+    // as determined by laraval
+    $job = Job::findOrFail($id); // using eloquent orm.
+
+    // Delete
+    $job->delete();
 
     return redirect('/jobs');
 });
