@@ -90,3 +90,8 @@ Seeders
 - php artisan make:seeder // create a dedicated seeder file.  That is create a seeder for user table only etc.
 - php artisan db:seed // runs DefaultSeeder.php by default
 - php artisan db:seed --class=JobSeeder // run a specific seeder. !!! REMEMBER TO CLEAR TABLE FIRST OR SEEDING WILL JUST APPEND DATA !!!
+
+Fillable propert in models
+- $fillable // signifies which fields can be mass populated when using eloquent to create a record.
+- $guarded // opposite to fillable, so signifies which fields CANNOT be mass populated. Usually less annoying than fillable
+- so to diable fillable one way is to use $guarded with an empty array.
