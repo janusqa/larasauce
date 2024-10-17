@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\RegisteredUserController;
+use App\Http\Controllers\SessionController;
 use App\Models\Job;
 use Illuminate\Support\Facades\Route;
 
@@ -11,6 +13,13 @@ Route::get('/', function () {
         "name" => "Lary Robot",
     ]);
 });
+
+Route::get('/contact', function () {
+    return view('contact');
+});
+// Route::view('/contact', 'contact');
+
+// Jobs
 // Route::view('/', 'home'); // short nand method for the above route that just returns a static view
 
 // Index with inline function closure
@@ -173,7 +182,10 @@ Route::patch('/jobs/{job}', [JobController::class, "update"]);
 // Destroy with controller
 Route::delete('/jobs/{job}', [JobController::class, "destroy"]);
 
-Route::get('/contact', function () {
-    return view('contact');
-});
-// Route::view('/contact', 'contact');
+
+// Auth
+Route::get('/register', [RegisteredUserController::class, 'create']);
+Route::post('/register', [RegisteredUserController::class, 'store']);
+
+Route::get('/login', [SessionController::class, 'create']);
+Route::post('/login', [SessionController::class, 'store']);

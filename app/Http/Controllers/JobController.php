@@ -96,7 +96,7 @@ class JobController extends Controller
         return redirect('/jobs/' . $job['id']);
     }
 
-    public function destory(Job $job)
+    public function destroy(Job $job)
     {
         // Authorize
         // TODO:
