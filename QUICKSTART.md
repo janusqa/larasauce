@@ -143,3 +143,5 @@ Route::resource('jobs', JobController::class, [
 ])
 
 
+Authentication
+- check out laravel breeze
