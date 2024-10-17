@@ -100,3 +100,46 @@ Validation
 - request()->validate()
 - request()->validate(['title' => ['required', min:3]])
 - https://laravel.com/docs/validation
+
+Controllers
+- php artisan make:controller // interactive prompt
+- php artisan make:controller <MyController>
+- php artisan route:list  // list all your routes
+- php artisan route:list --except-vendor // list routes with out all the noise of vendor routes
+- The route names are specific
+  - index
+  - show
+  - create
+  - store
+  - edit
+  - update
+  - destroy
+  
+Controllers can be grouped to simplify even further
+
+Route::controller(JobController::class)->group(function() {
+    Route::get("/jobs", "index");
+    Route::get('/jobs/{job}', "show");
+    Route::get('jobs/create',  "create");
+    Route::post('/jobs', "store");
+    Route::get('/jobs/{job}/edit', "edit");
+    Route::patch('/jobs/{job}', "update");
+    Route::delete('/jobs/{job}', "destroy");
+})
+
+Can use resource route to autogenerate the above. Note specific route names are used
+Resource is just the collective name for all the related routes for a model. Contollers are use to handle the business logic for these routes.
+
+Route::resource('jobs', JobController::class)
+
+if some of the default routes are not needed we can exclude them
+Route::resource('jobs', JobController::class, [
+    'except' => ['edit']
+])
+
+OR include only routes
+Route::resource('jobs', JobController::class, [
+    'only' => ['edit']
+])
+
+
