@@ -3,8 +3,19 @@
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
+use App\Mail\JobPosted;
 use App\Models\Job;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+
+// Route::get('/test', function () {
+//     // return new JobPosted();
+//     Log::info('This is a test log message.');
+//     Mail::to("mis@futureshock-global.com")->send(new JobPosted());
+
+//     return 'done';
+// });
 
 Route::get('/', function () {
 

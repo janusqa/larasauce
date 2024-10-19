@@ -216,3 +216,28 @@ Note that this "can" method/directive can be found on the
 Policies
 - policies are attached to all models
 - php artisan make:policy
+- see app/policies/jobPolicy for exxample
+- we use these exactly like gates, so we can replace all our gates with policies
+
+EMAIL
+- php artisan make:mail
+- folder location is app/Mail/JobPosted.php
+- sending a mail example
+```
+Route::get('test', function () {
+    // return new JobPosted();
+    Mail::to("mis@futureshock-global.com")->send(new JobPosted());
+    return 'Done';
+});
+```
+
+can  set from/to in .env file which affects mails globally and also override on a per mailable for examle in the mailable class file
+```
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Job Posted',
+            from: '....'
+            replyTo: '...'
+        );
+    }
