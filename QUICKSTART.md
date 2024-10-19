@@ -145,3 +145,74 @@ Route::resource('jobs', JobController::class, [
 
 Authentication
 - check out laravel breeze
+
+
+Gates
+- Gate::
+- Gates are like real gates. They allow entry if you meet certain criteria.
+- For example in our Jobcontroller edit function we can check if a user is authorized to perform a certain action. This logic is stuck in the controller. Enter gates.  
+- Example of a gate in action. It checks the authorization of a user to edit a job
+  ```
+      public function edit(Job $job)
+    {
+        Gate::define('edit-job', function (User $user, Job $job) {
+            return ($job->employer->user->is($user));
+        }); // Define a gate that will check if a user can update this job
+
+        if (Auth::guest()) return redirect('/login');
+
+        // if ($job->employer->user->isNot(Auth::user())) abort(403);
+        Gate::authorize('edit-job', $job); // use the gate to allow user to update job
+
+        return view('jobs/edit', ["job" => $job]);
+    }
+    ```
+- Gate::authorize is automatically handled by Laravel and returns a 403 but if you need to handle the behavour manually use
+  - Gate::denies or Gate::denies
+  - example
+  ```
+  // if the gate denies access to the user trying to edit this job then do something, like redirect somewhere or run some other logic
+  if (Gate::denies('edit-job', $job)) {
+
+  }
+  ```
+- For best usage Gates should be place where they can be accessed easily.  In above example the gate is only created when the edit page is displayed.  This is not exactly what we want.  We need it to be more globally accessible.  
+- Place it in the app/Providers/AppServiceProvider.php file in the boot section.
+- Note that the user passed to the gate is always the currently logged in user. So if you are not logged in the Gate instanaly fails and does not run any logic inside. If you do need to Gate to run the logic even if user is not logged in can make user optional or give it a default of null
+  ```
+          Gate::define('edit-job', function (?User $user, Job $job) {
+            return ($job->employer->user->is($user));
+        }); 
+    
+    OR
+
+            Gate::define('edit-job', function (User $user = null, Job $job) {
+            return ($job->employer->user->is($user));
+        }); 
+    ```
+Note we can use these gates to show/hide/enable/disable features like buttons on the fornt end.
+eg.        
+```
+@can('edit-job', $job) <!-- using a gate to hid and show the edit button if user is authorized via the gate-->
+   <p><x-button href="/jobs/{{ $job['id'] }}/edit">Edit Job</x-button></p>
+@endcan
+```
+
+Using gates can get repetitive when you have to put them in every controller funtion they are needed in.  A better way is to call them at the ROUTE (the route file) level using MIDDLEWARE
+
+Middleware
+- can be used on the route level
+- can use multipe middleware on one route
+- eg: Route::post('/jobs', [JobController::class, "store"])->middleware('auth'); // requires user to be signed in.
+- eg: Route::post('/jobs', [JobController::class, "edit"])->middleware(['auth', can:edit-job,job]); //user must be signed in AND we use a gate to check if user can edit. // NOTE the job provided to can-edit is the wildcard {job} mentioned in the route url
+OR
+Route::post('/jobs', [JobController::class, "edit"])->middleware('auth')->can(edit-job,job)
+
+Note that this "can" method/directive can be found on the 
+- Route declarations
+- User model
+- blade views
+
+Policies
+- policies are attached to all models
+- php artisan make:policy

@@ -74,7 +74,13 @@ Route::get('jobs/create', [JobController::class, "create"]);
 // });
 
 // Edit with controller
-Route::get('/jobs/{job}/edit', [JobController::class, "edit"]);
+// user must be authenticated AND be authorized to edit this job
+// NOTE the job provided to can-edit is the wildcard {job} mentioned in the route url
+// Route::get('/jobs/{job}/edit', [JobController::class, "edit"])->middleware(['auth', 'can:edit-job,job']);
+Route::get('/jobs/{job}/edit', [JobController::class, "edit"])
+    ->middleware('auth')
+    // ->can('edit-job,job') // Gate // Now handled by the policy below so we can disable this
+    ->can('edit', 'job'); // Policy. This tells lavarel to find the policy for the job model and run the edit policy within it
 
 
 // Show
@@ -124,7 +130,7 @@ Route::get('/jobs/{job}', [JobController::class, "show"]);
 // });
 
 // Store with controller
-Route::post('/jobs', [JobController::class, "store"]);
+Route::post('/jobs', [JobController::class, "store"])->middleware('auth'); // user must be authenticated
 
 // Update
 // Route::patch('/jobs/{job}', function (Job $job) {
@@ -187,6 +193,6 @@ Route::delete('/jobs/{job}', [JobController::class, "destroy"]);
 Route::get('/register', [RegisteredUserController::class, 'create']);
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
-Route::get('/login', [SessionController::class, 'create']);
+Route::get('/login', [SessionController::class, 'create'])->name('login'); // Yes. You can give a route a name. It's optional
 Route::post('/login', [SessionController::class, 'store']);
 Route::post('/logout', [SessionController::class, 'destroy']);
