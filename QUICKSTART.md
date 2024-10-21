@@ -1,4 +1,4 @@
-Setup laravel
+### Setup laravel
 - curl -s https://laravel.build/example-app | bash
 - cd ./example-app
 - Add APP_PORT=9000 to .env file to avoid app starting on port 80
@@ -6,7 +6,7 @@ Setup laravel
 - ./vendor/bin/sail artisan migrate (Run only the very first time you set up the app)
 
 
-Run laravel app
+### Run laravel app
 - cd ./example-app
 - ./vendor/bin/sail up
 
@@ -29,11 +29,11 @@ Running commands must be done via sail
   - php artisan make:model Employer -m -f  // create a model with accompanying migration and factory
 
 
-REPL for laravel app
+### REPL for laravel app
 - php artisan tinker  // opens a repl for laravel
 
 
-Factories
+### Factories
 - used to create data from a model.
 - Models by composition can take on behaviour via tratis.
 - User model has trait hasFactory which means we can call factory methods on user to generate data
@@ -42,7 +42,7 @@ Factories
   - App\Models\User::factory(100)->create()
 
 
-Eloquent
+### loquent
 - App\Models\Job::find(1);
 
 N+1 problem 
@@ -72,7 +72,7 @@ N+1 problem
     TO: $jobs = Job::with('employer')->get(); //eager loading. Load emplyer information
    ```
 
-Pagination
+### Pagination
 - see "jobs" route and jobs.blade.php.
 - Pagination UI looks good by default but we can also customize it if need be
     - to customize it we must fetch it from vendor and pushish it to our local project so we can edit it.
@@ -81,7 +81,7 @@ Pagination
     - we can switch to bootsrap for instance instead of tailwind via "App/Providers/AppServiceProvider.php"
         -  add "Paginator::useBootstrapFive();" to the boot function.  
   
-Seeders
+### Seeders
 - use this to seed a database with data afer doing for exampe a "php artisan migrate:fresh"
 - seeders are location in "/database/seeders"
 - php artisan db:seed  // run the seeders to seed db
@@ -91,12 +91,12 @@ Seeders
 - php artisan db:seed // runs DefaultSeeder.php by default
 - php artisan db:seed --class=JobSeeder // run a specific seeder. !!! REMEMBER TO CLEAR TABLE FIRST OR SEEDING WILL JUST APPEND DATA !!!
 
-Fillable propert in models
+### Fillable propert in models
 - $fillable // signifies which fields can be mass populated when using eloquent to create a record.
 - $guarded // opposite to fillable, so signifies which fields CANNOT be mass populated. Usually less annoying than fillable
 - so to diable fillable one way is to use $guarded with an empty array.
 
-Validation
+### Validation
 - request()->validate()
 - request()->validate(['title' => ['required', min:3]])
 - https://laravel.com/docs/validation
@@ -147,7 +147,7 @@ Authentication
 - check out laravel breeze
 
 
-Gates
+### Gates
 - Gate::
 - Gates are like real gates. They allow entry if you meet certain criteria.
 - For example in our Jobcontroller edit function we can check if a user is authorized to perform a certain action. This logic is stuck in the controller. Enter gates.  
@@ -200,7 +200,7 @@ eg.
 
 Using gates can get repetitive when you have to put them in every controller funtion they are needed in.  A better way is to call them at the ROUTE (the route file) level using MIDDLEWARE
 
-Middleware
+### Middleware
 - can be used on the route level
 - can use multipe middleware on one route
 - eg: Route::post('/jobs', [JobController::class, "store"])->middleware('auth'); // requires user to be signed in.
@@ -213,13 +213,13 @@ Note that this "can" method/directive can be found on the
 - User model
 - blade views
 
-Policies
+### Policies
 - policies are attached to all models
 - php artisan make:policy
 - see app/policies/jobPolicy for exxample
 - we use these exactly like gates, so we can replace all our gates with policies
 
-EMAIL
+### EMAIL
 - php artisan make:mail
 - folder location is app/Mail/JobPosted.php
 - sending a mail example
@@ -241,3 +241,31 @@ can  set from/to in .env file which affects mails globally and also override on 
             replyTo: '...'
         );
     }
+```
+
+### QUEUES
+ - Mail::to($job->employer->user->email)->queue(new JobPosted($job)); // queue to send asyncronsly 
+ - php artisan queue:work // manually enable the workers which will then listen and perform task. Crtl+c to stop. It must be run on production to start workers.  They are tools like "Supervisor" that helps with this.
+ - dispatch can be used to queue a task
+ ```
+     dispatch(function () {
+        logger('hello from the queue!');
+    });
+```
+
+### JOBS
+- A job is a dedicated job class
+- php artisan make:job
+  - This creates a dedicated job task in app/Jobs
+  - in this job class put the logic of the job in the handle() function
+  - dispatch job directly instead of with queue closure. The job has its own dispatch method as seen below.
+    ```   
+    //dispatch dedicated job.  I.E. no queue closure.
+    TranslateJobListing::dispatch(function () {
+        logger('Hello from translate job listing!');
+    });
+    ```
+
+    ### Vite
+    - Vite is used to bundle and manage our front end, and laravel has buil in support.
+    - It's already configured in the package.json file, so just run "npm install" to install it
